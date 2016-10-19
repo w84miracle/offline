@@ -183,9 +183,13 @@ Offline.checks.xhr = ->
 Offline.checks.image = ->
   img = document.createElement 'img'
   img.onerror = Offline.markDown
-  img.onload = Offline.markUp
+  img.onload = -> clearTimeout(imgTimer);Offline.markUp()
   img.src = Offline.getOption('checks.image.url')
-
+  imageTimeout = Offline.getOption('checks.image.timeout')
+  if imageTimeout
+    imgTimer = setTimeout ->
+      Offline.markDown(), imageTimeout
+      
   undefined
 
 Offline.checks.down = Offline.markDown
